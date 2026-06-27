@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 
-function Header() {
+function Header({ onHomeClick, onRecipesClick, onLoginClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
     setMenuOpen(false);
   }
 
+  function handleNavigation(event, callback) {
+    event.preventDefault();
+    closeMenu();
+    callback();
+  }
+
   return (
     <header className="site-header">
       <nav className="navbar" aria-label="Navegacao principal">
-        <a className="brand" href="#login" onClick={closeMenu}>
+        <a className="brand" href="#home" onClick={(event) => handleNavigation(event, onHomeClick)}>
           Receitas Food
         </a>
 
@@ -26,15 +32,21 @@ function Header() {
         </button>
 
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-          <a href="#login" onClick={closeMenu}>
+          <a href="#home" onClick={(event) => handleNavigation(event, onHomeClick)}>
             Inicio
           </a>
-          <a href="#receitas" onClick={closeMenu}>
+          <a href="#receitas" onClick={(event) => handleNavigation(event, onRecipesClick)}>
             Receitas
           </a>
-          <a href="#amigos" onClick={closeMenu}>
-            Amigos
-          </a>
+          <button
+            type="button"
+            onClick={() => {
+              closeMenu();
+              onLoginClick();
+            }}
+          >
+            Entrar
+          </button>
           <a href="#footer" onClick={closeMenu}>
             Contato
           </a>

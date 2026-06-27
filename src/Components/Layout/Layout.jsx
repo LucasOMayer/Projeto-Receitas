@@ -1,10 +1,14 @@
 import Footer from "./Footer";
 import Header from "./Header";
 
-function Layout({ children }) {
+function Layout({ children, onHomeClick, onRecipesClick, onLoginClick }) {
   return (
     <div className="app">
-      <Header />
+      <Header
+        onHomeClick={onHomeClick}
+        onRecipesClick={onRecipesClick}
+        onLoginClick={onLoginClick}
+      />
       <main>{children}</main>
       <Footer />
     </div>

@@ -1,14 +1,131 @@
 .app {
   min-height: 100vh;
-  background: #fff8ef;
-  color: #28211d;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.home-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(255, 248, 239, 0.08), rgba(255, 248, 239, 0.9) 50%, rgba(255, 248, 239, 0.72)),
+    url("./assets/bannerPrincipal.png") center / cover no-repeat;
+}
+
+.home-content {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 72px 0;
+}
+
+.home-content h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(3.4rem, 8vw, 6.6rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.home-content p {
+  max-width: 590px;
+  margin: 20px 0 28px;
+  color: var(--color-muted);
+  font-size: 1.16rem;
+  line-height: 1.7;
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(232, 93, 35, 0.22);
+}
+
+.home-button:hover,
+.home-button:focus-visible {
+  background: var(--color-primary-dark);
+}
+
+.home-button.secondary {
+  background: #2f241f;
+  box-shadow: 0 14px 30px rgba(47, 36, 31, 0.18);
+}
+
+.home-button.secondary:hover,
+.home-button.secondary:focus-visible {
+  background: #171310;
+}
+
+.login-view {
+  background: var(--color-bg);
+}
+
+.back-home-button {
+  position: relative;
+  z-index: 2;
+  margin: 24px 0 0 max(16px, calc((100vw - 1120px) / 2));
+  min-height: 42px;
+  border: 1px solid rgba(72, 52, 37, 0.16);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-weight: 800;
+}
+
+.profile-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 72px 0;
+}
+
+.profile-card {
+  max-width: 640px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(83, 58, 39, 0.14);
+  box-shadow: 0 18px 45px rgba(62, 39, 23, 0.1);
+  border-radius: 8px;
+  padding: 28px;
+}
+
+.profile-card h2,
+.profile-card p {
+  margin: 0;
+}
+
+.profile-card h2 {
+  color: var(--color-text);
+  font-size: 2rem;
+}
+
+.profile-card p {
+  margin-top: 12px;
+  color: var(--color-muted);
+  line-height: 1.7;
 }
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 250, 243, 0.92);
+  background: rgba(255, 250, 243, 0.86);
   border-bottom: 1px solid rgba(96, 70, 48, 0.12);
   backdrop-filter: blur(14px);
 }
@@ -24,8 +141,9 @@
 }
 
 .brand {
-  color: #2f241f;
-  font-size: 1.2rem;
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-size: 1.28rem;
   font-weight: 800;
   text-decoration: none;
 }
@@ -36,16 +154,24 @@
   gap: 10px;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-links button {
   color: #4e4037;
   font-weight: 600;
   padding: 10px 12px;
   text-decoration: none;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .nav-links a:hover,
-.nav-links a:focus-visible {
-  color: #e85d23;
+.nav-links a:focus-visible,
+.nav-links button:hover,
+.nav-links button:focus-visible {
+  color: var(--color-primary);
+  background: rgba(232, 93, 35, 0.08);
 }
 
 .menu-button {
@@ -63,8 +189,8 @@
 }
 
 .site-footer {
-  background: #251f1b;
-  color: #fff8ef;
+  background: var(--color-dark);
+  color: var(--color-bg);
 }
 
 .footer-content {
@@ -155,7 +281,7 @@
 .newsletter-form button {
   width: 50px;
   border: 0;
-  background: #e85d23;
+  background: var(--color-primary);
   color: #ffffff;
   cursor: pointer;
   font-size: 1.1rem;
@@ -214,6 +340,12 @@
     padding: 12px;
   }
 
+  .nav-links button {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+  }
+
   .footer-content {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -222,6 +354,20 @@
 @media (max-width: 560px) {
   .navbar {
     width: min(100% - 24px, 1120px);
+  }
+
+  .home-content {
+    width: min(100% - 24px, 1120px);
+    padding: 48px 0;
+  }
+
+  .home-content h1 {
+    font-size: 3rem;
+  }
+
+  .home-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .footer-content {

@@ -1,10 +1,27 @@
 import { users } from "../data/users.data.js";
+import { query } from "../db.js";
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function login(request, response) {
+function mapUser(user) {
+  return {
+    id: user.id,
+    name: user.name || user.fullName,
+    username: user.username,
+    email: user.email,
+    bio: user.bio || "",
+    avatarUrl: user.avatar_url || user.avatarUrl || "",
+  };
+}
+
+async function findUserByEmailInDatabase(email) {
+  const result = await query("SELECT * FROM users WHERE email = $1", [email]);
+  return result.rows[0] || null;
+}
+
+export async function login(request, response) {
   const { email, password } = request.body;
 
   if (!email || !password) {
@@ -19,29 +36,40 @@ export function login(request, response) {
     });
   }
 
-  const user = users.find((currentUser) => currentUser.email === email);
+  try {
+    const user = await findUserByEmailInDatabase(email);
 
-  if (!user || user.password !== password) {
-    return response.status(401).json({
-      message: "Credenciais invalidas para login simulado.",
+    if (!user || user.password_hash !== password) {
+      return response.status(401).json({
+        message: "Credenciais inválidas.",
+      });
+    }
+
+    return response.json({
+      message: "Login realizado com sucesso. JWT será implementado em etapa futura.",
+      user: mapUser(user),
+    });
+  } catch {
+    const user = users.find((currentUser) => currentUser.email === email);
+
+    if (!user || user.password !== password) {
+      return response.status(401).json({
+        message: "Credenciais inválidas para login simulado.",
+      });
+    }
+
+    return response.json({
+      message: "Login simulado realizado com sucesso. Token real será implementado em etapa futura.",
+      user: mapUser(user),
     });
   }
-
-  return response.json({
-    message: "Login simulado realizado com sucesso. Token real sera implementado em etapa futura.",
-    user: {
-      id: user.id,
-      fullName: user.fullName,
-      username: user.username,
-      email: user.email,
-    },
-  });
 }
 
-export function register(request, response) {
-  const { fullName, username, email, password, confirmPassword } = request.body;
+export async function register(request, response) {
+  const { fullName, name, username, email, password, confirmPassword, bio, avatarUrl } = request.body;
+  const displayName = name || fullName;
 
-  if (!fullName || !username || !email || !password || !confirmPassword) {
+  if (!displayName || !username || !email || !password || !confirmPassword) {
     return response.status(400).json({
       message: "Todos os campos são obrigatórios.",
     });
@@ -65,37 +93,50 @@ export function register(request, response) {
     });
   }
 
-  const emailAlreadyExists = users.some((user) => user.email === email);
+  try {
+    const result = await query(
+      `
+        INSERT INTO users (name, username, email, password_hash, bio, avatar_url)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `,
+      [displayName, username, email, password, bio || "", avatarUrl || ""],
+    );
 
-  if (emailAlreadyExists) {
-    return response.status(409).json({
-      message: "Email ja cadastrado no ambiente simulado.",
+    return response.status(201).json({
+      message: "Cadastro criado com sucesso. Segurança avançada será implementada depois.",
+      user: mapUser(result.rows[0]),
+    });
+  } catch {
+    const emailAlreadyExists = users.some((user) => user.email === email);
+
+    if (emailAlreadyExists) {
+      return response.status(409).json({
+        message: "Email já cadastrado no ambiente simulado.",
+      });
+    }
+
+    const newUser = {
+      id: Date.now(),
+      fullName: displayName,
+      username,
+      email,
+      password,
+      bio: bio || "",
+      avatarUrl: avatarUrl || "",
+      createdAt: new Date().toISOString(),
+    };
+
+    users.push(newUser);
+
+    return response.status(201).json({
+      message: "Cadastro simulado criado com sucesso. Banco real será conectado em etapa futura.",
+      user: mapUser(newUser),
     });
   }
-
-  const newUser = {
-    id: Date.now(),
-    fullName,
-    username,
-    email,
-    password,
-    createdAt: new Date().toISOString(),
-  };
-
-  users.push(newUser);
-
-  return response.status(201).json({
-    message: "Cadastro simulado criado com sucesso. Banco real sera conectado em etapa futura.",
-    user: {
-      id: newUser.id,
-      fullName: newUser.fullName,
-      username: newUser.username,
-      email: newUser.email,
-    },
-  });
 }
 
-export function recoverPassword(request, response) {
+export async function recoverPassword(request, response) {
   const { email } = request.body;
 
   if (!email) {
@@ -108,6 +149,12 @@ export function recoverPassword(request, response) {
     return response.status(400).json({
       message: "Informe um email válido.",
     });
+  }
+
+  try {
+    await findUserByEmailInDatabase(email);
+  } catch {
+    // Fallback silencioso: por segurança, a resposta é a mesma.
   }
 
   return response.json({

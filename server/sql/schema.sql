@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  full_name VARCHAR(150) NOT NULL,
+  name VARCHAR(150) NOT NULL,
   username VARCHAR(80) NOT NULL UNIQUE,
   email VARCHAR(150) NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  bio TEXT,
+  avatar_url TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -11,14 +13,12 @@ CREATE TABLE IF NOT EXISTS recipes (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
   title VARCHAR(150) NOT NULL,
-  author VARCHAR(120) NOT NULL,
   category VARCHAR(80) NOT NULL,
   ingredients TEXT[] NOT NULL,
   preparation TEXT NOT NULL,
   preparation_time VARCHAR(50) NOT NULL,
   waiting_time VARCHAR(50) DEFAULT '0 min',
   image_url TEXT,
-  likes INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Dependências
 node_modules
+.npm-cache
 
 # Build
 dist

@@ -15,6 +15,9 @@ Nesta etapa, o foco está no front-end da aplicação. O login, a publicação d
 - JavaScript
 - CSS
 - React Icons
+- Node.js
+- Express.js
+- PostgreSQL/EDB
 - ESLint
 
 ## Funcionalidades Implementadas
@@ -100,21 +103,64 @@ Para gerar a versão otimizada do projeto:
 npm.cmd run build
 ```
 
-## Verificacao de Codigo
+## Verificação de Código
 
-Para executar a verificacao com ESLint:
+Para executar a verificação com ESLint:
 
 ```bash
 npm.cmd run lint
 ```
 
-## Observacoes Importantes
+## Configuração do PostgreSQL/EDB
+
+Crie um arquivo `.env` dentro da pasta `server/` com base no arquivo `server/.env.example`:
+
+```env
+PORT=3333
+DATABASE_URL=postgres://postgres:senha@localhost:5432/receitas_food
+```
+
+Crie o banco de dados:
+
+```bash
+createdb receitas_food
+```
+
+Execute o arquivo de estrutura das tabelas:
+
+```bash
+psql -d receitas_food -f server/sql/schema.sql
+```
+
+Execute os dados iniciais de teste:
+
+```bash
+psql -d receitas_food -f server/sql/seed.sql
+```
+
+Para rodar a API Express:
+
+```bash
+npm.cmd run server:dev
+```
+
+Rotas principais para teste:
+
+```txt
+http://localhost:3333/api/health
+http://localhost:3333/api/recipes
+http://localhost:3333/api/recipes/1
+```
+
+Caso o banco não esteja configurado, a API continua usando dados em memória como fallback.
+
+## Observações Importantes
 
 - O login ainda não possui autenticação real.
 - As receitas publicadas são armazenadas apenas no estado do React durante a execução da página.
 - Ao recarregar o navegador, os dados cadastrados no front-end são perdidos.
-- O projeto ainda não possui back-end.
-- O projeto ainda não possui banco de dados.
+- O projeto possui API Express com fallback em memória.
+- O projeto já possui schema SQL preparado para PostgreSQL/EDB.
 
 ## Proximas Melhorias Planejadas
 

@@ -21,13 +21,13 @@ function ForgotPasswordForm({ onShowLogin }) {
     }
 
     if (!isValidEmail(email)) {
-      setMessage("Digite um email valido.");
+      setMessage("Digite um email válido.");
       setMessageType("error");
       return;
     }
 
     await recoverPassword(email);
-    setMessage("Se este email estiver cadastrado, enviaremos instrucoes de recuperacao.");
+    setMessage("Se este email estiver cadastrado, enviaremos instruções de recuperação.");
     setMessageType("success");
     setEmail("");
   }
@@ -35,9 +35,9 @@ function ForgotPasswordForm({ onShowLogin }) {
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <div className="auth-form-heading">
-        <span>Recuperacao</span>
+        <span>Recuperação</span>
         <h2>Recuperar acesso</h2>
-        <p>Informe seu email para receber as instrucoes de recuperacao da sua conta.</p>
+        <p>Informe seu email para receber as instruções de recuperação da sua conta.</p>
       </div>
 
       <label className="auth-field" htmlFor="auth-recover-email">
@@ -56,7 +56,7 @@ function ForgotPasswordForm({ onShowLogin }) {
       </label>
 
       <button className="auth-submit" type="submit">
-        Enviar instrucoes
+        Enviar instruções
       </button>
 
       {message && <p className={`auth-message ${messageType}`}>{message}</p>}

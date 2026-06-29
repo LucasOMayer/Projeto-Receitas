@@ -38,7 +38,7 @@ export function recoverPassword(email) {
   // return fetch(`${AUTH_API_BASE}/recover-password`, { method: "POST", body: JSON.stringify({ email }) });
   return simulateResponse({
     endpoint: `${AUTH_API_BASE}/recover-password`,
-    message: "Recuperacao de senha simulada com sucesso.",
+    message: "Recuperação de senha simulada com sucesso.",
     email,
   });
 }

@@ -1,12 +1,12 @@
 # Receitas Food
 
-Receitas Food e um projeto academico desenvolvido com React + Vite. A proposta e simular uma rede social gastronomica simples, onde usuarios podem visualizar receitas, publicar novas receitas no front-end, pesquisar preparos, filtrar por categoria e interagir com cards por meio de curtidas, salvamentos e comentarios.
+Receitas Food é um projeto acadêmico desenvolvido com React + Vite. A proposta é simular uma rede social gastronômica simples, onde usuários podem visualizar receitas, publicar novas receitas no front-end, pesquisar preparos, filtrar por categoria e interagir com cards por meio de curtidas, salvamentos e comentários.
 
 ## Objetivo Academico
 
-O objetivo do projeto e praticar a criacao de interfaces modernas com React, organizacao de componentes, uso de estado com `useState`, renderizacao de listas, formularios controlados, filtros de dados e responsividade com CSS.
+O objetivo do projeto é praticar a criação de interfaces modernas com React, organização de componentes, uso de estado com `useState`, renderização de listas, formulários controlados, filtros de dados e responsividade com CSS.
 
-Nesta etapa, o foco esta no front-end da aplicacao. O login, a publicacao de receitas e as interacoes funcionam apenas localmente no navegador, sem banco de dados e sem autenticacao real.
+Nesta etapa, o foco está no front-end da aplicação. O login, a publicação de receitas e as interações funcionam apenas localmente no navegador, sem banco de dados e sem autenticação real.
 
 ## Tecnologias Utilizadas
 
@@ -23,7 +23,7 @@ Nesta etapa, o foco esta no front-end da aplicacao. O login, a publicacao de rec
 - Header responsivo com links de navegacao
 - Footer com newsletter simples
 - Layout organizado envolvendo header, conteudo e footer
-- Tela de login separada da pagina inicial
+- Tela de login separada da página inicial
 - Feed de receitas com cards
 - Lista inicial de receitas usando dados mockados
 - Formulario para publicar receita no front-end
@@ -31,7 +31,7 @@ Nesta etapa, o foco esta no front-end da aplicacao. O login, a publicacao de rec
 - Filtro por categoria
 - Botao de curtir receita
 - Botao de salvar receita
-- Campo para adicionar comentarios em cada card
+- Campo para adicionar comentários em cada card
 - Layout responsivo para telas grandes e dispositivos moveis
 
 ## Estrutura de Pastas
@@ -94,7 +94,7 @@ http://127.0.0.1:5173/
 
 ## Como Gerar o Build
 
-Para gerar a versao otimizada do projeto:
+Para gerar a versão otimizada do projeto:
 
 ```bash
 npm.cmd run build
@@ -110,23 +110,23 @@ npm.cmd run lint
 
 ## Observacoes Importantes
 
-- O login ainda nao possui autenticacao real.
-- As receitas publicadas sao armazenadas apenas no estado do React durante a execucao da pagina.
-- Ao recarregar o navegador, os dados cadastrados no front-end sao perdidos.
-- O projeto ainda nao possui back-end.
-- O projeto ainda nao possui banco de dados.
+- O login ainda não possui autenticação real.
+- As receitas publicadas são armazenadas apenas no estado do React durante a execução da página.
+- Ao recarregar o navegador, os dados cadastrados no front-end são perdidos.
+- O projeto ainda não possui back-end.
+- O projeto ainda não possui banco de dados.
 
 ## Proximas Melhorias Planejadas
 
 - Criar uma API com Express.js
 - Integrar banco de dados PostgreSQL ou EDB
-- Implementar cadastro de usuarios
-- Implementar autenticacao real
+- Implementar cadastro de usuários
+- Implementar autenticação real
 - Salvar receitas publicadas no banco de dados
-- Salvar curtidas, receitas favoritas e comentarios
-- Criar pagina de perfil do usuario
-- Adicionar validacoes mais completas nos formularios
+- Salvar curtidas, receitas favoritas e comentários
+- Criar página de perfil do usuário
+- Adicionar validações mais completas nos formulários
 
 ## Status do Projeto
 
-Projeto em desenvolvimento para fins academicos, com foco atual no front-end e na organizacao visual da aplicacao.
+Projeto em desenvolvimento para fins acadêmicos, com foco atual no front-end e na organização visual da aplicação.

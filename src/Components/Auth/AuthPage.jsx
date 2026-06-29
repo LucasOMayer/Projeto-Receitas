@@ -17,9 +17,9 @@ const authContent = {
     text: "Publique suas receitas, monte seu caderno de favoritos e participe da comunidade Receitas Food.",
   },
   forgot: {
-    label: "Recuperacao",
+    label: "Recuperação",
     title: "Recuperar acesso",
-    text: "Informe seu email para receber as instrucoes de recuperacao da sua conta.",
+    text: "Informe seu email para receber as instruções de recuperação da sua conta.",
   },
 };
 
@@ -41,7 +41,7 @@ function AuthPage({ onBackHome, onLoginSuccess }) {
 
       <div className="auth-shell">
         <button className="auth-back-button" type="button" onClick={onBackHome}>
-          Voltar para inicio
+          Voltar para início
         </button>
 
         <div className="auth-layout">
@@ -51,7 +51,7 @@ function AuthPage({ onBackHome, onLoginSuccess }) {
             <p>{content.text}</p>
             <div className="auth-highlights">
               <span>Receitas favoritas</span>
-              <span>Comentarios</span>
+              <span>Comentários</span>
               <span>Comunidade</span>
             </div>
           </aside>
@@ -75,7 +75,7 @@ function AuthPage({ onBackHome, onLoginSuccess }) {
             {activeForm === "register" && (
               <RegisterForm
                 onRegisterSuccess={() =>
-                  showLogin("Cadastro realizado com sucesso. Agora faca login para continuar.")
+                  showLogin("Cadastro realizado com sucesso. Agora faça login para continuar.")
                 }
                 onShowLogin={() => showLogin()}
               />

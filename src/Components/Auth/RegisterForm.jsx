@@ -37,13 +37,13 @@ function RegisterForm({ onRegisterSuccess, onShowLogin }) {
       !formData.password.trim() ||
       !formData.confirmPassword.trim()
     ) {
-      setMessage("Preencha todos os campos obrigatorios.");
+      setMessage("Preencha todos os campos obrigatórios.");
       setMessageType("error");
       return;
     }
 
     if (!isValidEmail(formData.email)) {
-      setMessage("Digite um email valido.");
+      setMessage("Digite um email válido.");
       setMessageType("error");
       return;
     }
@@ -55,7 +55,7 @@ function RegisterForm({ onRegisterSuccess, onShowLogin }) {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setMessage("A senha e a confirmacao precisam ser iguais.");
+      setMessage("A senha e a confirmação precisam ser iguais.");
       setMessageType("error");
       return;
     }
@@ -67,7 +67,7 @@ function RegisterForm({ onRegisterSuccess, onShowLogin }) {
     }
 
     await registerUser(formData);
-    setMessage("Cadastro criado no front-end. Usuario sera salvo no banco na proxima etapa.");
+    setMessage("Cadastro criado no front-end. Usuário será salvo no banco na próxima etapa.");
     setMessageType("success");
     setFormData({
       fullName: "",
@@ -108,7 +108,7 @@ function RegisterForm({ onRegisterSuccess, onShowLogin }) {
       </label>
 
       <label className="auth-field" htmlFor="auth-register-username">
-        Nome de usuario
+        Nome de usuário
         <div className="auth-input">
           <FiAtSign aria-hidden="true" />
           <input

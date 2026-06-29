@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import RecipeFilter from "../Recipes/RecipeFilter";
 import RecipeForm from "../Recipes/RecipeForm";
 import RecipeList from "../Recipes/RecipeList";
@@ -12,6 +12,7 @@ function FeedPage({ currentUser, onRequireAuth }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [authMessage, setAuthMessage] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const authMessageTimer = useRef(null);
   const isAuthenticated = Boolean(currentUser);
 
   const categories = useMemo(() => {
@@ -37,10 +38,21 @@ function FeedPage({ currentUser, onRequireAuth }) {
     });
   }, [recipes, searchTerm, selectedCategory]);
 
+  function showTemporaryAuthMessage() {
+      setAuthMessage("Você precisa entrar na sua conta para interagir com as receitas.");
+
+    if (authMessageTimer.current) {
+      window.clearTimeout(authMessageTimer.current);
+    }
+
+    authMessageTimer.current = window.setTimeout(() => {
+      setAuthMessage("");
+    }, 3500);
+  }
+
   function handleAddRecipe(newRecipe) {
     if (!isAuthenticated) {
-      setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
-      onRequireAuth();
+      showTemporaryAuthMessage();
       return;
     }
 
@@ -51,7 +63,7 @@ function FeedPage({ currentUser, onRequireAuth }) {
 
   function handlePublishClick() {
     if (!isAuthenticated) {
-      setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
+      showTemporaryAuthMessage();
       return;
     }
 
@@ -65,7 +77,7 @@ function FeedPage({ currentUser, onRequireAuth }) {
         <span className="eyebrow">Comunidade</span>
         <h2>Feed de Receitas</h2>
         <p>
-          Explore receitas da comunidade, encontre inspiracoes por ingrediente e
+          Explore receitas da comunidade, encontre inspirações por ingrediente e
           publique seus preparos quando quiser participar.
         </p>
       </div>
@@ -76,15 +88,15 @@ function FeedPage({ currentUser, onRequireAuth }) {
           <span>{filteredRecipes.length} receita(s) encontrada(s)</span>
         </div>
         <button type="button" onClick={handlePublishClick}>
-          {showForm ? "Fechar formulario" : "Publicar receita"}
+          {showForm ? "Fechar formulário" : "Publicar receita"}
         </button>
       </div>
 
-      {!isAuthenticated && (
+      {!isAuthenticated && authMessage && (
         <div className="auth-required-panel">
           <div>
-            <strong>Entre para comentar e salvar suas receitas favoritas.</strong>
-            <p>{authMessage || "Voce precisa entrar na sua conta para interagir com as receitas."}</p>
+            <strong>Acesso necessário</strong>
+            <p>{authMessage}</p>
           </div>
           <button type="button" onClick={onRequireAuth}>
             Entrar agora

@@ -34,7 +34,7 @@ function LoginForm({ notice, onLoginSuccess, onShowRegister, onShowForgot }) {
     }
 
     if (!isValidEmail(formData.email)) {
-      setMessage("Digite um email valido.");
+      setMessage("Digite um email válido.");
       setMessageType("error");
       return;
     }
@@ -47,11 +47,14 @@ function LoginForm({ notice, onLoginSuccess, onShowRegister, onShowForgot }) {
 
     const response = await loginUser(formData);
     const user = {
-      name: response.data?.user?.name || "Usuario Receitas Food",
+      name: response.data?.user?.name || "Usuário Receitas Food",
+      username: "chef_receitas",
       email: formData.email,
+      bio: "Apaixonado por receitas caseiras, sabores simples e novas ideias na cozinha.",
+      avatarUrl: "",
     };
 
-    setMessage("Login validado no front-end. Integracao com banco sera feita na proxima etapa.");
+    setMessage("Login validado no front-end. Integração com banco será feita na próxima etapa.");
     setMessageType("success");
 
     window.setTimeout(() => {
@@ -123,7 +126,7 @@ function LoginForm({ notice, onLoginSuccess, onShowRegister, onShowForgot }) {
       {message && <p className={`auth-message ${messageType}`}>{message}</p>}
 
       <p className="auth-switch">
-        Ainda nao tem conta?{" "}
+        Ainda não tem conta?{" "}
         <button type="button" onClick={onShowRegister}>
           Criar conta
         </button>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const fallbackImage =
   "https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=900&q=80";
@@ -9,6 +9,7 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
   const [authMessage, setAuthMessage] = useState("");
+  const authMessageTimer = useRef(null);
   const isAuthenticated = Boolean(currentUser);
 
   const likesCount = liked ? recipe.likes + 1 : recipe.likes;
@@ -18,8 +19,15 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
       : recipe.preparation;
 
   function requireAuth() {
-    setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
-    onRequireAuth();
+    setAuthMessage("Você precisa entrar na sua conta para interagir com as receitas.");
+
+    if (authMessageTimer.current) {
+      window.clearTimeout(authMessageTimer.current);
+    }
+
+    authMessageTimer.current = window.setTimeout(() => {
+      setAuthMessage("");
+    }, 3500);
   }
 
   function handleLikeClick() {
@@ -106,9 +114,9 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
           </button>
         </div>
 
-        {!isAuthenticated && (
+        {!isAuthenticated && authMessage && (
           <div className="card-auth-note">
-            <span>{authMessage || "Entre para comentar e salvar suas receitas favoritas."}</span>
+            <span>{authMessage}</span>
             <button type="button" onClick={onRequireAuth}>
               Entrar agora
             </button>
@@ -117,12 +125,12 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
 
         <form className="comment-form" onSubmit={handleCommentSubmit}>
           <label className="sr-only" htmlFor={`comment-${recipe.id}`}>
-            Comentario
+            Comentário
           </label>
           <input
             id={`comment-${recipe.id}`}
             type="text"
-            placeholder="Escreva um comentario sobre essa receita..."
+            placeholder="Escreva um comentário sobre essa receita..."
             value={commentText}
             onChange={(event) => setCommentText(event.target.value)}
           />

@@ -9,13 +9,13 @@ export function login(request, response) {
 
   if (!email || !password) {
     return response.status(400).json({
-      message: "Email e senha sao obrigatorios.",
+      message: "Email e senha são obrigatórios.",
     });
   }
 
   if (!isValidEmail(email)) {
     return response.status(400).json({
-      message: "Informe um email valido.",
+      message: "Informe um email válido.",
     });
   }
 
@@ -43,13 +43,13 @@ export function register(request, response) {
 
   if (!fullName || !username || !email || !password || !confirmPassword) {
     return response.status(400).json({
-      message: "Todos os campos sao obrigatorios.",
+      message: "Todos os campos são obrigatórios.",
     });
   }
 
   if (!isValidEmail(email)) {
     return response.status(400).json({
-      message: "Informe um email valido.",
+      message: "Informe um email válido.",
     });
   }
 
@@ -61,7 +61,7 @@ export function register(request, response) {
 
   if (password !== confirmPassword) {
     return response.status(400).json({
-      message: "Senha e confirmacao precisam ser iguais.",
+      message: "Senha e confirmação precisam ser iguais.",
     });
   }
 
@@ -100,17 +100,17 @@ export function recoverPassword(request, response) {
 
   if (!email) {
     return response.status(400).json({
-      message: "Email e obrigatorio para recuperacao de senha.",
+      message: "Email é obrigatório para recuperação de senha.",
     });
   }
 
   if (!isValidEmail(email)) {
     return response.status(400).json({
-      message: "Informe um email valido.",
+      message: "Informe um email válido.",
     });
   }
 
   return response.json({
-    message: "Se este email estiver cadastrado, enviaremos instrucoes de recuperacao.",
+    message: "Se este email estiver cadastrado, enviaremos instruções de recuperação.",
   });
 }

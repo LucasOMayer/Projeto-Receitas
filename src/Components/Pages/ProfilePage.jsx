@@ -5,8 +5,8 @@ function ProfilePage() {
         <span className="eyebrow">Perfil</span>
         <h2>Meu perfil culinario</h2>
         <p>
-          Esta pagina fica preparada para uma proxima etapa do projeto, quando
-          houver usuarios, receitas salvas e dados vindos de uma API.
+          Esta página fica preparada para uma próxima etapa do projeto, quando
+          houver usuários, receitas salvas e dados vindos de uma API.
         </p>
       </div>
     </section>

@@ -28,7 +28,7 @@ export function getRecipeById(request, response) {
   const recipe = findRecipeById(request.params.id);
 
   if (!recipe) {
-    return response.status(404).json({ message: "Receita nao encontrada." });
+    return response.status(404).json({ message: "Receita não encontrada." });
   }
 
   return response.json(recipe);
@@ -39,7 +39,7 @@ export function createRecipe(request, response) {
 
   if (missingFields.length > 0) {
     return response.status(400).json({
-      message: "Campos obrigatorios nao preenchidos.",
+      message: "Campos obrigatórios não preenchidos.",
       fields: missingFields,
     });
   }
@@ -68,7 +68,7 @@ export function updateRecipe(request, response) {
   const recipeIndex = recipes.findIndex((recipe) => recipe.id === Number(request.params.id));
 
   if (recipeIndex === -1) {
-    return response.status(404).json({ message: "Receita nao encontrada." });
+    return response.status(404).json({ message: "Receita não encontrada." });
   }
 
   const currentRecipe = recipes[recipeIndex];
@@ -88,7 +88,7 @@ export function deleteRecipe(request, response) {
   const recipeIndex = recipes.findIndex((recipe) => recipe.id === Number(request.params.id));
 
   if (recipeIndex === -1) {
-    return response.status(404).json({ message: "Receita nao encontrada." });
+    return response.status(404).json({ message: "Receita não encontrada." });
   }
 
   recipes.splice(recipeIndex, 1);

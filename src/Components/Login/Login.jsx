@@ -27,7 +27,7 @@ const Login = () => {
       return;
     }
 
-    setMessage("Login validado no front. Banco de dados entra na proxima etapa.");
+    setMessage("Login validado no front. Banco de dados entra na próxima etapa.");
   }
 
   return (
@@ -42,7 +42,7 @@ const Login = () => {
           <h1>Entre para salvar e descobrir receitas.</h1>
           <p>
             Login basico sem banco de dados por enquanto, pronto para conectar com
-            autenticacao real depois.
+            autenticação real depois.
           </p>
         </div>
 

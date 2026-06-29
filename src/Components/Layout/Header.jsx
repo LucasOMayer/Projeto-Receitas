@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 
-function Header({ onHomeClick, onRecipesClick, onLoginClick }) {
+function Header({ currentUser, onHomeClick, onRecipesClick, onLoginClick, onAccountClick, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -34,9 +34,20 @@ function Header({ onHomeClick, onRecipesClick, onLoginClick }) {
         </div>
 
         <div className="header-actions">
-          <button className="header-login-button" type="button" onClick={onLoginClick}>
-            Entrar
-          </button>
+          {currentUser ? (
+            <>
+              <button className="header-login-button" type="button" onClick={onAccountClick}>
+                Minha conta
+              </button>
+              <button className="header-logout-button" type="button" onClick={onLogout}>
+                Sair
+              </button>
+            </>
+          ) : (
+            <button className="header-login-button" type="button" onClick={onLoginClick}>
+              Entrar
+            </button>
+          )}
 
           <button
             className="menu-button"

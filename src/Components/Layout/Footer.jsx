@@ -33,7 +33,7 @@ function Footer() {
         </section>
 
         <section aria-labelledby="footer-pages">
-          <h3 id="footer-pages">Paginas</h3>
+          <h3 id="footer-pages">Páginas</h3>
           <a href="#login">Login</a>
           <a href="#receitas">Feed de receitas</a>
           <a href="#amigos">Feed de amigos</a>
@@ -42,8 +42,8 @@ function Footer() {
         <section aria-labelledby="footer-support">
           <h3 id="footer-support">Projeto</h3>
           <a href="#login">Perfil</a>
-          <a href="#login">Configuracoes</a>
-          <a href="#login">Area de chefs</a>
+          <a href="#login">Configurações</a>
+          <a href="#login">Área de chefs</a>
         </section>
 
         <section aria-labelledby="footer-news">

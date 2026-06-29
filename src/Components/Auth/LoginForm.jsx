@@ -6,7 +6,7 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function LoginForm({ onShowRegister, onShowForgot }) {
+function LoginForm({ notice, onLoginSuccess, onShowRegister, onShowForgot }) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -45,9 +45,18 @@ function LoginForm({ onShowRegister, onShowForgot }) {
       return;
     }
 
-    await loginUser(formData);
+    const response = await loginUser(formData);
+    const user = {
+      name: response.data?.user?.name || "Usuario Receitas Food",
+      email: formData.email,
+    };
+
     setMessage("Login validado no front-end. Integracao com banco sera feita na proxima etapa.");
     setMessageType("success");
+
+    window.setTimeout(() => {
+      onLoginSuccess(user);
+    }, 500);
   }
 
   return (
@@ -57,6 +66,8 @@ function LoginForm({ onShowRegister, onShowForgot }) {
         <h2>Acesse sua conta</h2>
         <p>Entre para salvar receitas, comentar preparos e acompanhar seus cozinheiros favoritos.</p>
       </div>
+
+      {notice && <p className="auth-message success">{notice}</p>}
 
       <label className="auth-field" htmlFor="auth-login-email">
         Email

@@ -96,30 +96,6 @@
   backdrop-filter: blur(16px);
 }
 
-.auth-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 22px;
-}
-
-.auth-tabs button {
-  min-height: 42px;
-  border: 1px solid rgba(83, 58, 39, 0.12);
-  background: #fff8ef;
-  color: #5d4b41;
-  border-radius: var(--radius-card);
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
-.auth-tabs button.is-active {
-  background: var(--color-primary);
-  color: #ffffff;
-  border-color: var(--color-primary);
-}
-
 .auth-form {
   display: grid;
   gap: 16px;
@@ -291,7 +267,6 @@
     padding: 18px;
   }
 
-  .auth-tabs,
   .auth-row,
   .auth-two-columns {
     grid-template-columns: 1fr;

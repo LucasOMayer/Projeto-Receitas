@@ -36,8 +36,8 @@ function ForgotPasswordForm({ onShowLogin }) {
     <form className="auth-form" onSubmit={handleSubmit}>
       <div className="auth-form-heading">
         <span>Recuperacao</span>
-        <h2>Recuperar senha</h2>
-        <p>Informe seu email para receber instrucoes de recuperacao de acesso.</p>
+        <h2>Recuperar acesso</h2>
+        <p>Informe seu email para receber as instrucoes de recuperacao da sua conta.</p>
       </div>
 
       <label className="auth-field" htmlFor="auth-recover-email">

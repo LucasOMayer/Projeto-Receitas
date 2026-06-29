@@ -7,6 +7,7 @@ import HomePage from "./Components/Pages/HomePage";
 
 function App() {
   const [view, setView] = useState("home");
+  const [currentUser, setCurrentUser] = useState(null);
 
   function showSection(sectionId) {
     setView("home");
@@ -24,6 +25,11 @@ function App() {
     }, 0);
   }
 
+  function handleLoginSuccess(user) {
+    setCurrentUser(user);
+    showSection("#home");
+  }
+
   return (
     <Layout
       onHomeClick={() => showSection("#home")}
@@ -33,10 +39,13 @@ function App() {
       {view === "home" ? (
         <>
           <HomePage onLoginClick={showAuth} />
-          <FeedPage />
+          <FeedPage currentUser={currentUser} onRequireAuth={showAuth} />
         </>
       ) : (
-        <AuthPage onBackHome={() => showSection("#home")} />
+        <AuthPage
+          onBackHome={() => showSection("#home")}
+          onLoginSuccess={handleLoginSuccess}
+        />
       )}
     </Layout>
   );

@@ -6,7 +6,7 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function RegisterForm({ onShowLogin }) {
+function RegisterForm({ onRegisterSuccess, onShowLogin }) {
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -77,6 +77,10 @@ function RegisterForm({ onShowLogin }) {
       confirmPassword: "",
       terms: false,
     });
+
+    window.setTimeout(() => {
+      onRegisterSuccess();
+    }, 700);
   }
 
   return (
@@ -84,7 +88,7 @@ function RegisterForm({ onShowLogin }) {
       <div className="auth-form-heading">
         <span>Cadastro</span>
         <h2>Crie sua conta</h2>
-        <p>Crie sua conta para publicar receitas, montar seu caderno de favoritos e participar da comunidade.</p>
+        <p>Publique suas receitas, monte seu caderno de favoritos e participe da comunidade Receitas Food.</p>
       </div>
 
       <label className="auth-field" htmlFor="auth-register-name">

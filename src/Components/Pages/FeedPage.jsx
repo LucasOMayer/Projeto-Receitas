@@ -5,12 +5,14 @@ import RecipeList from "../Recipes/RecipeList";
 import { recipesMock } from "../Recipes/recipesMock";
 import "../Recipes/Recipes.css";
 
-function FeedPage() {
+function FeedPage({ currentUser, onRequireAuth }) {
   const [recipes, setRecipes] = useState(recipesMock);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [successMessage, setSuccessMessage] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const isAuthenticated = Boolean(currentUser);
 
   const categories = useMemo(() => {
     const recipeCategories = recipes.map((recipe) => recipe.category);
@@ -36,9 +38,25 @@ function FeedPage() {
   }, [recipes, searchTerm, selectedCategory]);
 
   function handleAddRecipe(newRecipe) {
+    if (!isAuthenticated) {
+      setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
+      onRequireAuth();
+      return;
+    }
+
     setRecipes((currentRecipes) => [newRecipe, ...currentRecipes]);
     setSuccessMessage("Receita publicada com sucesso.");
     setShowForm(false);
+  }
+
+  function handlePublishClick() {
+    if (!isAuthenticated) {
+      setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
+      return;
+    }
+
+    setAuthMessage("");
+    setShowForm((current) => !current);
   }
 
   return (
@@ -57,10 +75,22 @@ function FeedPage() {
           <strong>Receitas em destaque</strong>
           <span>{filteredRecipes.length} receita(s) encontrada(s)</span>
         </div>
-        <button type="button" onClick={() => setShowForm((current) => !current)}>
+        <button type="button" onClick={handlePublishClick}>
           {showForm ? "Fechar formulario" : "Publicar receita"}
         </button>
       </div>
+
+      {!isAuthenticated && (
+        <div className="auth-required-panel">
+          <div>
+            <strong>Entre para comentar e salvar suas receitas favoritas.</strong>
+            <p>{authMessage || "Voce precisa entrar na sua conta para interagir com as receitas."}</p>
+          </div>
+          <button type="button" onClick={onRequireAuth}>
+            Entrar agora
+          </button>
+        </div>
+      )}
 
       <div className={`feed-grid ${showForm ? "has-form" : ""}`}>
         {showForm && (
@@ -78,7 +108,11 @@ function FeedPage() {
             onSearchChange={setSearchTerm}
             onCategoryChange={setSelectedCategory}
           />
-          <RecipeList recipes={filteredRecipes} />
+          <RecipeList
+            recipes={filteredRecipes}
+            currentUser={currentUser}
+            onRequireAuth={onRequireAuth}
+          />
         </div>
       </div>
     </section>

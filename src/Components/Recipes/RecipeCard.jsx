@@ -3,11 +3,13 @@ import { useState } from "react";
 const fallbackImage =
   "https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=900&q=80";
 
-function RecipeCard({ recipe }) {
+function RecipeCard({ recipe, currentUser, onRequireAuth }) {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
+  const [authMessage, setAuthMessage] = useState("");
+  const isAuthenticated = Boolean(currentUser);
 
   const likesCount = liked ? recipe.likes + 1 : recipe.likes;
   const preparationSummary =
@@ -15,13 +17,44 @@ function RecipeCard({ recipe }) {
       ? `${recipe.preparation.slice(0, 130)}...`
       : recipe.preparation;
 
+  function requireAuth() {
+    setAuthMessage("Voce precisa entrar na sua conta para interagir com as receitas.");
+    onRequireAuth();
+  }
+
+  function handleLikeClick() {
+    if (!isAuthenticated) {
+      requireAuth();
+      return;
+    }
+
+    setAuthMessage("");
+    setLiked((current) => !current);
+  }
+
+  function handleSaveClick() {
+    if (!isAuthenticated) {
+      requireAuth();
+      return;
+    }
+
+    setAuthMessage("");
+    setSaved((current) => !current);
+  }
+
   function handleCommentSubmit(event) {
     event.preventDefault();
+
+    if (!isAuthenticated) {
+      requireAuth();
+      return;
+    }
 
     if (!commentText.trim()) {
       return;
     }
 
+    setAuthMessage("");
     setComments((currentComments) => [commentText.trim(), ...currentComments]);
     setCommentText("");
   }
@@ -60,18 +93,27 @@ function RecipeCard({ recipe }) {
           <button
             className={liked ? "is-active" : ""}
             type="button"
-            onClick={() => setLiked((current) => !current)}
+            onClick={handleLikeClick}
           >
-            {liked ? "Curtido" : "Curtir"} ({likesCount})
+            {liked ? "Receita curtida" : "Curtir receita"} ({likesCount})
           </button>
           <button
             className={saved ? "is-active" : ""}
             type="button"
-            onClick={() => setSaved((current) => !current)}
+            onClick={handleSaveClick}
           >
-            {saved ? "Salvo" : "Salvar"}
+            {saved ? "Receita salva" : "Salvar receita"}
           </button>
         </div>
+
+        {!isAuthenticated && (
+          <div className="card-auth-note">
+            <span>{authMessage || "Entre para comentar e salvar suas receitas favoritas."}</span>
+            <button type="button" onClick={onRequireAuth}>
+              Entrar agora
+            </button>
+          </div>
+        )}
 
         <form className="comment-form" onSubmit={handleCommentSubmit}>
           <label className="sr-only" htmlFor={`comment-${recipe.id}`}>
@@ -80,7 +122,7 @@ function RecipeCard({ recipe }) {
           <input
             id={`comment-${recipe.id}`}
             type="text"
-            placeholder="Adicionar comentario"
+            placeholder="Escreva um comentario sobre essa receita..."
             value={commentText}
             onChange={(event) => setCommentText(event.target.value)}
           />

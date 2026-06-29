@@ -21,16 +21,6 @@ function Header({ onHomeClick, onRecipesClick, onLoginClick }) {
           Receitas Food
         </a>
 
-        <button
-          className="menu-button"
-          type="button"
-          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((current) => !current)}
-        >
-          {menuOpen ? <FiX /> : <FiMenu />}
-        </button>
-
         <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           <a href="#home" onClick={(event) => handleNavigation(event, onHomeClick)}>
             Inicio
@@ -38,18 +28,25 @@ function Header({ onHomeClick, onRecipesClick, onLoginClick }) {
           <a href="#receitas" onClick={(event) => handleNavigation(event, onRecipesClick)}>
             Receitas
           </a>
-          <button
-            type="button"
-            onClick={() => {
-              closeMenu();
-              onLoginClick();
-            }}
-          >
-            Entrar
-          </button>
           <a href="#footer" onClick={closeMenu}>
             Contato
           </a>
+        </div>
+
+        <div className="header-actions">
+          <button className="header-login-button" type="button" onClick={onLoginClick}>
+            Entrar
+          </button>
+
+          <button
+            className="menu-button"
+            type="button"
+            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((current) => !current)}
+          >
+            {menuOpen ? <FiX /> : <FiMenu />}
+          </button>
         </div>
       </nav>
     </header>

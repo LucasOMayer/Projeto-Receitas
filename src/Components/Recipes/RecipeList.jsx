@@ -1,6 +1,6 @@
 import RecipeCard from "./RecipeCard";
 
-function RecipeList({ recipes }) {
+function RecipeList({ recipes, currentUser, onRequireAuth }) {
   if (recipes.length === 0) {
     return (
       <div className="empty-recipes">
@@ -13,7 +13,12 @@ function RecipeList({ recipes }) {
   return (
     <div className="recipe-list">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.id} recipe={recipe} />
+        <RecipeCard
+          key={recipe.id}
+          recipe={recipe}
+          currentUser={currentUser}
+          onRequireAuth={onRequireAuth}
+        />
       ))}
     </div>
   );

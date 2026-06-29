@@ -8,24 +8,30 @@ import RegisterForm from "./RegisterForm";
 const authContent = {
   login: {
     label: "Acesso",
-    title: "Sua cozinha social em um so lugar.",
+    title: "Acesse sua conta",
     text: "Entre para salvar receitas, comentar preparos e acompanhar seus cozinheiros favoritos.",
   },
   register: {
     label: "Nova conta",
-    title: "Publique suas melhores receitas.",
-    text: "Crie seu perfil e participe da comunidade gastronomica do Receitas Food.",
+    title: "Crie sua conta",
+    text: "Publique suas receitas, monte seu caderno de favoritos e participe da comunidade Receitas Food.",
   },
   forgot: {
     label: "Recuperacao",
-    title: "Recupere seu acesso com tranquilidade.",
-    text: "Enviaremos as proximas instrucoes para o email informado, quando a integracao real estiver ativa.",
+    title: "Recuperar acesso",
+    text: "Informe seu email para receber as instrucoes de recuperacao da sua conta.",
   },
 };
 
-function AuthPage({ onBackHome }) {
+function AuthPage({ onBackHome, onLoginSuccess }) {
   const [activeForm, setActiveForm] = useState("login");
+  const [loginNotice, setLoginNotice] = useState("");
   const content = authContent[activeForm];
+
+  function showLogin(message = "") {
+    setActiveForm("login");
+    setLoginNotice(message);
+  }
 
   return (
     <section className="auth-page" id="auth">
@@ -51,43 +57,32 @@ function AuthPage({ onBackHome }) {
           </aside>
 
           <div className="auth-card">
-            <div className="auth-tabs" aria-label="Opcoes de autenticacao">
-              <button
-                className={activeForm === "login" ? "is-active" : ""}
-                type="button"
-                onClick={() => setActiveForm("login")}
-              >
-                Login
-              </button>
-              <button
-                className={activeForm === "register" ? "is-active" : ""}
-                type="button"
-                onClick={() => setActiveForm("register")}
-              >
-                Cadastro
-              </button>
-              <button
-                className={activeForm === "forgot" ? "is-active" : ""}
-                type="button"
-                onClick={() => setActiveForm("forgot")}
-              >
-                Esqueci senha
-              </button>
-            </div>
-
             {activeForm === "login" && (
               <LoginForm
-                onShowRegister={() => setActiveForm("register")}
-                onShowForgot={() => setActiveForm("forgot")}
+                notice={loginNotice}
+                onLoginSuccess={onLoginSuccess}
+                onShowRegister={() => {
+                  setLoginNotice("");
+                  setActiveForm("register");
+                }}
+                onShowForgot={() => {
+                  setLoginNotice("");
+                  setActiveForm("forgot");
+                }}
               />
             )}
 
             {activeForm === "register" && (
-              <RegisterForm onShowLogin={() => setActiveForm("login")} />
+              <RegisterForm
+                onRegisterSuccess={() =>
+                  showLogin("Cadastro realizado com sucesso. Agora faca login para continuar.")
+                }
+                onShowLogin={() => showLogin()}
+              />
             )}
 
             {activeForm === "forgot" && (
-              <ForgotPasswordForm onShowLogin={() => setActiveForm("login")} />
+              <ForgotPasswordForm onShowLogin={() => showLogin()} />
             )}
           </div>
         </div>

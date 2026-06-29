@@ -79,6 +79,50 @@
   background: var(--color-primary-dark);
 }
 
+.auth-required-panel,
+.card-auth-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #fff3e8;
+  border: 1px solid rgba(232, 93, 35, 0.18);
+  border-radius: var(--radius-card);
+  color: #5d3c2e;
+}
+
+.auth-required-panel {
+  margin-bottom: 20px;
+  padding: 16px 18px;
+}
+
+.auth-required-panel strong {
+  color: var(--color-text);
+}
+
+.auth-required-panel p {
+  margin: 4px 0 0;
+  color: #765747;
+}
+
+.auth-required-panel button,
+.card-auth-note button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  border: 0;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0 13px;
+}
+
+.auth-required-panel button:hover,
+.card-auth-note button:hover {
+  background: var(--color-primary-dark);
+}
+
 .recipe-form,
 .recipe-filter,
 .recipe-card,
@@ -312,6 +356,14 @@
   background: var(--color-primary);
 }
 
+.card-auth-note {
+  align-items: flex-start;
+  margin-top: 14px;
+  padding: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .comment-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 92px;
@@ -381,6 +433,12 @@
 
   .feed-toolbar button {
     width: 100%;
+  }
+
+  .auth-required-panel,
+  .card-auth-note {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .recipe-card-content {

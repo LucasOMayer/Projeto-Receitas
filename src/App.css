@@ -152,26 +152,44 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: auto;
 }
 
-.nav-links a,
-.nav-links button {
+.nav-links a {
   color: #4e4037;
   font-weight: 600;
   padding: 10px 12px;
   text-decoration: none;
-  border: 0;
-  background: transparent;
   border-radius: 8px;
-  cursor: pointer;
 }
 
 .nav-links a:hover,
-.nav-links a:focus-visible,
-.nav-links button:hover,
-.nav-links button:focus-visible {
+.nav-links a:focus-visible {
   color: var(--color-primary);
   background: rgba(232, 93, 35, 0.08);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-login-button {
+  min-height: 42px;
+  border: 0;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0 16px;
+  box-shadow: 0 10px 22px rgba(232, 93, 35, 0.18);
+}
+
+.header-login-button:hover,
+.header-login-button:focus-visible {
+  background: var(--color-primary-dark);
 }
 
 .menu-button {
@@ -340,12 +358,6 @@
     padding: 12px;
   }
 
-  .nav-links button {
-    width: 100%;
-    text-align: left;
-    padding: 12px;
-  }
-
   .footer-content {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -368,6 +380,11 @@
   .home-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .header-login-button {
+    min-height: 40px;
+    padding: 0 12px;
   }
 
   .footer-content {

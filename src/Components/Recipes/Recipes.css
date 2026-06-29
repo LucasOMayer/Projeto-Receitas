@@ -239,6 +239,13 @@
   background: #eef8f0;
 }
 
+.recipe-message.info,
+.recipe-message.loading {
+  color: #5d3c2e;
+  background: #fff3e8;
+  border: 1px solid rgba(232, 93, 35, 0.18);
+}
+
 .recipes-area {
   display: grid;
   gap: 18px;

@@ -1,9 +1,40 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RecipeFilter from "../Recipes/RecipeFilter";
 import RecipeForm from "../Recipes/RecipeForm";
 import RecipeList from "../Recipes/RecipeList";
 import { recipesMock } from "../Recipes/recipesMock";
+import { createRecipe, getRecipes } from "../../services/api";
 import "../Recipes/Recipes.css";
+
+function normalizeRecipe(recipe) {
+  return {
+    id: recipe.id,
+    name: recipe.name || recipe.title,
+    author: recipe.author || "Autor não informado",
+    category: recipe.category,
+    ingredients: recipe.ingredients || [],
+    preparation: recipe.preparation,
+    prepTime: recipe.prepTime || recipe.preparationTime || recipe.preparation_time || "Não informado",
+    waitTime: recipe.waitTime || recipe.waitingTime || recipe.waiting_time || "Não informado",
+    imageUrl: recipe.imageUrl || recipe.image_url || "",
+    likes: Number(recipe.likes || 0),
+    comments: recipe.comments || [],
+    createdAt: recipe.createdAt || recipe.created_at,
+  };
+}
+
+function toApiRecipe(recipe) {
+  return {
+    title: recipe.name,
+    author: recipe.author,
+    category: recipe.category,
+    ingredients: recipe.ingredients,
+    preparation: recipe.preparation,
+    preparationTime: recipe.prepTime,
+    waitingTime: recipe.waitTime,
+    imageUrl: recipe.imageUrl,
+  };
+}
 
 function FeedPage({ currentUser, onRequireAuth }) {
   const [recipes, setRecipes] = useState(recipesMock);
@@ -11,9 +42,45 @@ function FeedPage({ currentUser, onRequireAuth }) {
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [successMessage, setSuccessMessage] = useState("");
   const [authMessage, setAuthMessage] = useState("");
+  const [dataMessage, setDataMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const authMessageTimer = useRef(null);
   const isAuthenticated = Boolean(currentUser);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadRecipes() {
+      try {
+        const apiRecipes = await getRecipes();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setRecipes(apiRecipes.map(normalizeRecipe));
+        setDataMessage("Receitas carregadas da API.");
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+
+        setRecipes(recipesMock);
+        setDataMessage("API indisponível. Exibindo receitas locais de exemplo.");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadRecipes();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const categories = useMemo(() => {
     const recipeCategories = recipes.map((recipe) => recipe.category);
@@ -50,15 +117,24 @@ function FeedPage({ currentUser, onRequireAuth }) {
     }, 3500);
   }
 
-  function handleAddRecipe(newRecipe) {
+  async function handleAddRecipe(newRecipe) {
     if (!isAuthenticated) {
       showTemporaryAuthMessage();
       return;
     }
 
-    setRecipes((currentRecipes) => [newRecipe, ...currentRecipes]);
-    setSuccessMessage("Receita publicada com sucesso.");
-    setShowForm(false);
+    try {
+      const createdRecipe = await createRecipe(toApiRecipe(newRecipe));
+      setRecipes((currentRecipes) => [normalizeRecipe(createdRecipe), ...currentRecipes]);
+      setSuccessMessage("Receita publicada com sucesso na API.");
+      setDataMessage("Receitas conectadas à API.");
+    } catch {
+      setRecipes((currentRecipes) => [newRecipe, ...currentRecipes]);
+      setSuccessMessage("API indisponível. Receita publicada localmente nesta sessão.");
+      setDataMessage("Usando fallback local porque a API não respondeu.");
+    } finally {
+      setShowForm(false);
+    }
   }
 
   function handlePublishClick() {
@@ -85,7 +161,9 @@ function FeedPage({ currentUser, onRequireAuth }) {
       <div className="feed-toolbar">
         <div>
           <strong>Receitas em destaque</strong>
-          <span>{filteredRecipes.length} receita(s) encontrada(s)</span>
+          <span>
+            {isLoading ? "Carregando receitas..." : `${filteredRecipes.length} receita(s) encontrada(s)`}
+          </span>
         </div>
         <button type="button" onClick={handlePublishClick}>
           {showForm ? "Fechar formulário" : "Publicar receita"}
@@ -112,6 +190,8 @@ function FeedPage({ currentUser, onRequireAuth }) {
         )}
 
         <div className="recipes-area">
+          {isLoading && <p className="recipe-message loading">Buscando receitas na API...</p>}
+          {dataMessage && !isLoading && <p className="recipe-message info">{dataMessage}</p>}
           {successMessage && !showForm && <p className="recipe-message success">{successMessage}</p>}
           <RecipeFilter
             searchTerm={searchTerm}

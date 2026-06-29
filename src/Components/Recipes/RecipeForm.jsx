@@ -23,7 +23,7 @@ function RecipeForm({ onAddRecipe, successMessage }) {
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (
@@ -42,7 +42,7 @@ function RecipeForm({ onAddRecipe, successMessage }) {
       .map((ingredient) => ingredient.trim())
       .filter(Boolean);
 
-    onAddRecipe({
+    await onAddRecipe({
       id: Date.now(),
       name: formData.name.trim(),
       author: formData.author.trim(),

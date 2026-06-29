@@ -26,10 +26,15 @@ function ForgotPasswordForm({ onShowLogin }) {
       return;
     }
 
-    await recoverPassword(email);
-    setMessage("Se este email estiver cadastrado, enviaremos instruções de recuperação.");
-    setMessageType("success");
-    setEmail("");
+    try {
+      const apiMessage = await recoverPassword(email);
+      setMessage(apiMessage);
+      setMessageType("success");
+      setEmail("");
+    } catch (error) {
+      setMessage(error.message || "Não foi possível solicitar a recuperação.");
+      setMessageType("error");
+    }
   }
 
   return (

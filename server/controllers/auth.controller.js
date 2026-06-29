@@ -1,8 +1,13 @@
+import crypto from "node:crypto";
 import { users } from "../data/users.data.js";
 import { query } from "../db.js";
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function hashPassword(password) {
+  return crypto.createHash("sha256").update(password).digest("hex");
 }
 
 function mapUser(user) {
@@ -16,8 +21,13 @@ function mapUser(user) {
   };
 }
 
-async function findUserByEmailInDatabase(email) {
+async function findUserByEmail(email) {
   const result = await query("SELECT * FROM users WHERE email = $1", [email]);
+  return result.rows[0] || null;
+}
+
+async function findUserByUsername(username) {
+  const result = await query("SELECT * FROM users WHERE username = $1", [username]);
   return result.rows[0] || null;
 }
 
@@ -37,11 +47,12 @@ export async function login(request, response) {
   }
 
   try {
-    const user = await findUserByEmailInDatabase(email);
+    const user = await findUserByEmail(email);
+    const passwordHash = hashPassword(password);
 
-    if (!user || user.password_hash !== password) {
+    if (!user || user.password_hash !== passwordHash) {
       return response.status(401).json({
-        message: "Credenciais inválidas.",
+        message: "Email ou senha inválidos.",
       });
     }
 
@@ -49,18 +60,10 @@ export async function login(request, response) {
       message: "Login realizado com sucesso. JWT será implementado em etapa futura.",
       user: mapUser(user),
     });
-  } catch {
-    const user = users.find((currentUser) => currentUser.email === email);
-
-    if (!user || user.password !== password) {
-      return response.status(401).json({
-        message: "Credenciais inválidas para login simulado.",
-      });
-    }
-
-    return response.json({
-      message: "Login simulado realizado com sucesso. Token real será implementado em etapa futura.",
-      user: mapUser(user),
+  } catch (error) {
+    return response.status(503).json({
+      message: "Não foi possível validar o login no banco de dados.",
+      detail: error.message,
     });
   }
 }
@@ -69,9 +72,9 @@ export async function register(request, response) {
   const { fullName, name, username, email, password, confirmPassword, bio, avatarUrl } = request.body;
   const displayName = name || fullName;
 
-  if (!displayName || !username || !email || !password || !confirmPassword) {
+  if (!displayName || !username || !email || !password) {
     return response.status(400).json({
-      message: "Todos os campos são obrigatórios.",
+      message: "Nome, usuário, email e senha são obrigatórios.",
     });
   }
 
@@ -87,51 +90,46 @@ export async function register(request, response) {
     });
   }
 
-  if (password !== confirmPassword) {
+  if (confirmPassword && password !== confirmPassword) {
     return response.status(400).json({
       message: "Senha e confirmação precisam ser iguais.",
     });
   }
 
   try {
+    const emailAlreadyExists = await findUserByEmail(email);
+
+    if (emailAlreadyExists) {
+      return response.status(409).json({
+        message: "Email já cadastrado.",
+      });
+    }
+
+    const usernameAlreadyExists = await findUserByUsername(username);
+
+    if (usernameAlreadyExists) {
+      return response.status(409).json({
+        message: "Nome de usuário já cadastrado.",
+      });
+    }
+
     const result = await query(
       `
         INSERT INTO users (name, username, email, password_hash, bio, avatar_url)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *
+        RETURNING id, name, username, email, bio, avatar_url
       `,
-      [displayName, username, email, password, bio || "", avatarUrl || ""],
+      [displayName, username, email, hashPassword(password), bio || "", avatarUrl || ""],
     );
 
     return response.status(201).json({
-      message: "Cadastro criado com sucesso. Segurança avançada será implementada depois.",
+      message: "Cadastro realizado com sucesso.",
       user: mapUser(result.rows[0]),
     });
-  } catch {
-    const emailAlreadyExists = users.some((user) => user.email === email);
-
-    if (emailAlreadyExists) {
-      return response.status(409).json({
-        message: "Email já cadastrado no ambiente simulado.",
-      });
-    }
-
-    const newUser = {
-      id: Date.now(),
-      fullName: displayName,
-      username,
-      email,
-      password,
-      bio: bio || "",
-      avatarUrl: avatarUrl || "",
-      createdAt: new Date().toISOString(),
-    };
-
-    users.push(newUser);
-
-    return response.status(201).json({
-      message: "Cadastro simulado criado com sucesso. Banco real será conectado em etapa futura.",
-      user: mapUser(newUser),
+  } catch (error) {
+    return response.status(503).json({
+      message: "Não foi possível criar o usuário no banco de dados.",
+      detail: error.message,
     });
   }
 }
@@ -152,9 +150,10 @@ export async function recoverPassword(request, response) {
   }
 
   try {
-    await findUserByEmailInDatabase(email);
+    await findUserByEmail(email);
   } catch {
-    // Fallback silencioso: por segurança, a resposta é a mesma.
+    const fallbackUser = users.find((user) => user.email === email);
+    void fallbackUser;
   }
 
   return response.json({

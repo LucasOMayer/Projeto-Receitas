@@ -1,44 +1,42 @@
-const AUTH_API_BASE = "/api/auth";
+const AUTH_API_BASE = "http://localhost:3333/api/auth";
 
-function simulateResponse(data) {
-  return Promise.resolve({
-    success: true,
-    data,
-  });
-}
-
-export function loginUser(credentials) {
-  // Futuramente:
-  // return fetch(`${AUTH_API_BASE}/login`, { method: "POST", body: JSON.stringify(credentials) });
-  return simulateResponse({
-    endpoint: `${AUTH_API_BASE}/login`,
-    message: "Login simulado com sucesso.",
-    user: {
-      email: credentials.email,
+async function requestAuth(endpoint, body) {
+  const response = await fetch(`${AUTH_API_BASE}${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify(body),
   });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erro ao comunicar com a API de autenticação.");
+  }
+
+  return data;
 }
 
-export function registerUser(userData) {
-  // Futuramente:
-  // return fetch(`${AUTH_API_BASE}/register`, { method: "POST", body: JSON.stringify(userData) });
-  return simulateResponse({
-    endpoint: `${AUTH_API_BASE}/register`,
-    message: "Cadastro simulado com sucesso.",
-    user: {
-      name: userData.fullName,
-      username: userData.username,
-      email: userData.email,
-    },
-  });
+export async function loginUser(credentials) {
+  const data = await requestAuth("/login", credentials);
+  return data.user;
 }
 
-export function recoverPassword(email) {
-  // Futuramente:
-  // return fetch(`${AUTH_API_BASE}/recover-password`, { method: "POST", body: JSON.stringify({ email }) });
-  return simulateResponse({
-    endpoint: `${AUTH_API_BASE}/recover-password`,
-    message: "Recuperação de senha simulada com sucesso.",
-    email,
+export async function registerUser(userData) {
+  const data = await requestAuth("/register", {
+    name: userData.fullName,
+    username: userData.username,
+    email: userData.email,
+    password: userData.password,
+    confirmPassword: userData.confirmPassword,
+    bio: userData.bio || "",
   });
+
+  return data.user;
+}
+
+export async function recoverPassword(email) {
+  const data = await requestAuth("/recover-password", { email });
+  return data.message;
 }

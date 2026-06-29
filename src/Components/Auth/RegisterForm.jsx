@@ -66,21 +66,26 @@ function RegisterForm({ onRegisterSuccess, onShowLogin }) {
       return;
     }
 
-    await registerUser(formData);
-    setMessage("Cadastro criado no front-end. Usuário será salvo no banco na próxima etapa.");
-    setMessageType("success");
-    setFormData({
-      fullName: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      terms: false,
-    });
+    try {
+      await registerUser(formData);
+      setMessage("Cadastro realizado com sucesso. Agora faça login.");
+      setMessageType("success");
+      setFormData({
+        fullName: "",
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        terms: false,
+      });
 
-    window.setTimeout(() => {
-      onRegisterSuccess();
-    }, 700);
+      window.setTimeout(() => {
+        onRegisterSuccess();
+      }, 700);
+    } catch (error) {
+      setMessage(error.message || "Não foi possível criar a conta.");
+      setMessageType("error");
+    }
   }
 
   return (

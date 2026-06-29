@@ -45,21 +45,15 @@ function LoginForm({ notice, onLoginSuccess, onShowRegister, onShowForgot }) {
       return;
     }
 
-    const response = await loginUser(formData);
-    const user = {
-      name: response.data?.user?.name || "Usuário Receitas Food",
-      username: "chef_receitas",
-      email: formData.email,
-      bio: "Apaixonado por receitas caseiras, sabores simples e novas ideias na cozinha.",
-      avatarUrl: "",
-    };
-
-    setMessage("Login validado no front-end. Integração com banco será feita na próxima etapa.");
-    setMessageType("success");
-
-    window.setTimeout(() => {
+    try {
+      const user = await loginUser(formData);
+      setMessage("Login realizado com sucesso.");
+      setMessageType("success");
       onLoginSuccess(user);
-    }, 500);
+    } catch {
+      setMessage("Email ou senha inválidos.");
+      setMessageType("error");
+    }
   }
 
   return (

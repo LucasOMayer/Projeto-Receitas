@@ -188,6 +188,19 @@
   width: fit-content;
 }
 
+.account-avatar-editor {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.account-avatar-preview {
+  width: 86px;
+  height: 86px;
+  font-size: 2.5rem;
+}
+
 .account-message {
   margin: 0;
   color: #2e6a43;
@@ -197,10 +210,17 @@
   padding: 12px;
 }
 
+.account-message-error {
+  color: #9b2f20;
+  background: #fff0ed;
+  border-color: rgba(155, 47, 32, 0.18);
+}
+
 @media (max-width: 720px) {
   .account-profile,
   .account-stats,
-  .account-form-grid {
+  .account-form-grid,
+  .account-avatar-editor {
     grid-template-columns: 1fr;
   }
 

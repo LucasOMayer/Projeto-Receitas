@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 const fallbackImage =
   "https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=900&q=80";
 
-function RecipeCard({ recipe, currentUser, onRequireAuth }) {
+function RecipeCard({ recipe, currentUser, onRequireAuth, onSelectRecipe, onDeleteRecipe }) {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -11,6 +11,7 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
   const [authMessage, setAuthMessage] = useState("");
   const authMessageTimer = useRef(null);
   const isAuthenticated = Boolean(currentUser);
+  const isAuthor = Boolean(currentUser?.id && recipe.userId && Number(currentUser.id) === Number(recipe.userId));
 
   const likesCount = liked ? recipe.likes + 1 : recipe.likes;
   const preparationSummary =
@@ -112,6 +113,14 @@ function RecipeCard({ recipe, currentUser, onRequireAuth }) {
           >
             {saved ? "Receita salva" : "Salvar receita"}
           </button>
+          <button type="button" onClick={() => onSelectRecipe(recipe)}>
+            Ver receita completa
+          </button>
+          {isAuthor && (
+            <button className="danger-button" type="button" onClick={() => onDeleteRecipe(recipe)}>
+              Excluir receita
+            </button>
+          )}
         </div>
 
         {!isAuthenticated && authMessage && (

@@ -267,8 +267,21 @@
   text-decoration: none;
 }
 
+.footer-content button {
+  width: fit-content;
+  border: 0;
+  background: transparent;
+  color: #d8c7ba;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+}
+
 .footer-content a:hover,
-.footer-content a:focus-visible {
+.footer-content a:focus-visible,
+.footer-content button:hover,
+.footer-content button:focus-visible {
   color: #ff8b4a;
 }
 

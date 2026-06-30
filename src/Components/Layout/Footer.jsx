@@ -2,7 +2,14 @@ import { useState } from "react";
 import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 
-function Footer() {
+function Footer({
+  currentUser,
+  onHomeClick,
+  onRecipesClick,
+  onLoginClick,
+  onAccountClick,
+  onCreateRecipe,
+}) {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMessage, setNewsletterMessage] = useState("");
 
@@ -10,6 +17,15 @@ function Footer() {
     event.preventDefault();
     setNewsletterMessage("Email cadastrado para novidades.");
     setNewsletterEmail("");
+  }
+
+  function handleAccountClick() {
+    if (currentUser) {
+      onAccountClick();
+      return;
+    }
+
+    onLoginClick();
   }
 
   return (
@@ -34,16 +50,28 @@ function Footer() {
 
         <section aria-labelledby="footer-pages">
           <h3 id="footer-pages">Páginas</h3>
-          <a href="#login">Login</a>
-          <a href="#receitas">Feed de receitas</a>
-          <a href="#amigos">Feed de amigos</a>
+          <button type="button" onClick={currentUser ? onAccountClick : onLoginClick}>
+            {currentUser ? "Minha conta" : "Entrar"}
+          </button>
+          <button type="button" onClick={onRecipesClick}>
+            Feed de receitas
+          </button>
+          <button type="button" onClick={onHomeClick}>
+            Início
+          </button>
         </section>
 
         <section aria-labelledby="footer-support">
           <h3 id="footer-support">Projeto</h3>
-          <a href="#login">Perfil</a>
-          <a href="#login">Configurações</a>
-          <a href="#login">Área de chefs</a>
+          <button type="button" onClick={handleAccountClick}>
+            Perfil
+          </button>
+          <button type="button" onClick={handleAccountClick}>
+            Configurações
+          </button>
+          <button type="button" onClick={currentUser ? onCreateRecipe : onLoginClick}>
+            Área de chefs
+          </button>
         </section>
 
         <section aria-labelledby="footer-news">

@@ -25,6 +25,7 @@ function mapDatabaseRecipe(row) {
   return {
     id: row.id,
     title: row.title,
+    userId: row.user_id,
     author: row.author || "Autor não informado",
     category: row.category,
     ingredients: row.ingredients,
@@ -167,6 +168,7 @@ export async function createRecipe(request, response) {
     const newRecipe = {
       id: Date.now(),
       title: request.body.title,
+      userId: request.body.userId || null,
       author: request.body.author,
       category: request.body.category,
       ingredients: request.body.ingredients,
@@ -242,7 +244,21 @@ export async function updateRecipe(request, response) {
 }
 
 export async function deleteRecipe(request, response) {
+  const userId = Number(request.query.userId || request.body?.userId);
+
   try {
+    const recipeResult = await query("SELECT id, user_id FROM recipes WHERE id = $1", [request.params.id]);
+
+    if (recipeResult.rowCount === 0) {
+      return response.status(404).json({ message: "Receita não encontrada." });
+    }
+
+    const recipe = recipeResult.rows[0];
+
+    if (!userId || Number(recipe.user_id) !== userId) {
+      return response.status(403).json({ message: "Apenas o autor pode excluir esta receita." });
+    }
+
     const result = await query("DELETE FROM recipes WHERE id = $1 RETURNING id", [request.params.id]);
 
     if (result.rowCount === 0) {
@@ -255,6 +271,10 @@ export async function deleteRecipe(request, response) {
 
     if (recipeIndex === -1) {
       return response.status(404).json({ message: "Receita não encontrada." });
+    }
+
+    if (!userId || Number(recipes[recipeIndex].userId) !== userId) {
+      return response.status(403).json({ message: "Apenas o autor pode excluir esta receita." });
     }
 
     recipes.splice(recipeIndex, 1);

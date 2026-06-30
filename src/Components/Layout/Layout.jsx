@@ -9,6 +9,7 @@ function Layout({
   onLoginClick,
   onAccountClick,
   onLogout,
+  onCreateRecipe,
 }) {
   return (
     <div className="app">
@@ -18,10 +19,18 @@ function Layout({
         onLoginClick={onLoginClick}
         onAccountClick={onAccountClick}
         onLogout={onLogout}
+        onCreateRecipe={onCreateRecipe}
         currentUser={currentUser}
       />
       <main>{children}</main>
-      <Footer />
+      <Footer
+        currentUser={currentUser}
+        onHomeClick={onHomeClick}
+        onRecipesClick={onRecipesClick}
+        onLoginClick={onLoginClick}
+        onAccountClick={onAccountClick}
+        onCreateRecipe={onCreateRecipe}
+      />
     </div>
   );
 }

@@ -245,6 +245,43 @@
   text-align: center;
 }
 
+.login-transition {
+  min-height: calc(100vh - 72px);
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background:
+    linear-gradient(90deg, rgba(255, 248, 239, 0.2), rgba(255, 248, 239, 0.92)),
+    url("../../assets/bannerPrincipal.png") center / cover no-repeat;
+}
+
+.login-transition-card {
+  width: min(520px, 100%);
+  padding: 34px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(83, 58, 39, 0.14);
+  border-radius: var(--radius-card);
+  box-shadow: 0 24px 70px rgba(62, 39, 23, 0.18);
+}
+
+.login-transition-card h1,
+.login-transition-card p {
+  margin: 0;
+}
+
+.login-transition-card h1 {
+  color: var(--color-text);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1;
+}
+
+.login-transition-card p {
+  margin-top: 14px;
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
 @media (max-width: 920px) {
   .auth-layout {
     grid-template-columns: 1fr;

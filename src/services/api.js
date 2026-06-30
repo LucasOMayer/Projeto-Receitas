@@ -1,4 +1,5 @@
 const RECIPES_API_URL = "http://localhost:3333/api/recipes";
+const UPLOADS_API_URL = "http://localhost:3333/api/uploads";
 
 async function request(url, options = {}) {
   const response = await fetch(url, {
@@ -38,8 +39,27 @@ export function updateRecipe(id, recipe) {
   });
 }
 
-export function deleteRecipe(id) {
-  return request(`${RECIPES_API_URL}/${id}`, {
+export function deleteRecipe(id, userId) {
+  return request(`${RECIPES_API_URL}/${id}?userId=${userId}`, {
     method: "DELETE",
   });
+}
+
+export async function uploadImage(file) {
+  const response = await fetch(UPLOADS_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": file.type || "application/octet-stream",
+      "x-file-name": file.name,
+    },
+    body: file,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erro ao enviar imagem.");
+  }
+
+  return data.imageUrl;
 }

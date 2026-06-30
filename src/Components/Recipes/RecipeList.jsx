@@ -1,6 +1,6 @@
 import RecipeCard from "./RecipeCard";
 
-function RecipeList({ recipes, currentUser, onRequireAuth }) {
+function RecipeList({ recipes, currentUser, onRequireAuth, onSelectRecipe, onDeleteRecipe }) {
   if (recipes.length === 0) {
     return (
       <div className="empty-recipes">
@@ -18,6 +18,8 @@ function RecipeList({ recipes, currentUser, onRequireAuth }) {
           recipe={recipe}
           currentUser={currentUser}
           onRequireAuth={onRequireAuth}
+          onSelectRecipe={onSelectRecipe}
+          onDeleteRecipe={onDeleteRecipe}
         />
       ))}
     </div>

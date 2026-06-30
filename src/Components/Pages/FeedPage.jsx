@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import RecipeFilter from "../Recipes/RecipeFilter";
-import RecipeForm from "../Recipes/RecipeForm";
 import RecipeList from "../Recipes/RecipeList";
 import { recipesMock } from "../Recipes/recipesMock";
-import { createRecipe, getRecipes } from "../../services/api";
+import { deleteRecipe, getRecipes } from "../../services/api";
 import "../Recipes/Recipes.css";
 
 function normalizeRecipe(recipe) {
@@ -23,20 +22,7 @@ function normalizeRecipe(recipe) {
   };
 }
 
-function toApiRecipe(recipe) {
-  return {
-    title: recipe.name,
-    author: recipe.author,
-    category: recipe.category,
-    ingredients: recipe.ingredients,
-    preparation: recipe.preparation,
-    preparationTime: recipe.prepTime,
-    waitingTime: recipe.waitTime,
-    imageUrl: recipe.imageUrl,
-  };
-}
-
-function FeedPage({ currentUser, onRequireAuth }) {
+function FeedPage({ currentUser, onRequireAuth, onCreateRecipe, onSelectRecipe }) {
   const [recipes, setRecipes] = useState(recipesMock);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
@@ -44,7 +30,6 @@ function FeedPage({ currentUser, onRequireAuth }) {
   const [authMessage, setAuthMessage] = useState("");
   const [dataMessage, setDataMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
   const authMessageTimer = useRef(null);
   const isAuthenticated = Boolean(currentUser);
 
@@ -117,26 +102,6 @@ function FeedPage({ currentUser, onRequireAuth }) {
     }, 3500);
   }
 
-  async function handleAddRecipe(newRecipe) {
-    if (!isAuthenticated) {
-      showTemporaryAuthMessage();
-      return;
-    }
-
-    try {
-      const createdRecipe = await createRecipe(toApiRecipe(newRecipe));
-      setRecipes((currentRecipes) => [normalizeRecipe(createdRecipe), ...currentRecipes]);
-      setSuccessMessage("Receita publicada com sucesso na API.");
-      setDataMessage("Receitas conectadas à API.");
-    } catch {
-      setRecipes((currentRecipes) => [newRecipe, ...currentRecipes]);
-      setSuccessMessage("API indisponível. Receita publicada localmente nesta sessão.");
-      setDataMessage("Usando fallback local porque a API não respondeu.");
-    } finally {
-      setShowForm(false);
-    }
-  }
-
   function handlePublishClick() {
     if (!isAuthenticated) {
       showTemporaryAuthMessage();
@@ -144,7 +109,17 @@ function FeedPage({ currentUser, onRequireAuth }) {
     }
 
     setAuthMessage("");
-    setShowForm((current) => !current);
+    onCreateRecipe();
+  }
+
+  async function handleDeleteRecipe(recipe) {
+    try {
+      await deleteRecipe(recipe.id, currentUser.id);
+      setRecipes((currentRecipes) => currentRecipes.filter((currentRecipe) => currentRecipe.id !== recipe.id));
+      setSuccessMessage("Receita excluída com sucesso.");
+    } catch (error) {
+      setSuccessMessage(error.message || "Não foi possível excluir a receita.");
+    }
   }
 
   return (
@@ -166,7 +141,7 @@ function FeedPage({ currentUser, onRequireAuth }) {
           </span>
         </div>
         <button type="button" onClick={handlePublishClick}>
-          {showForm ? "Fechar formulário" : "Publicar receita"}
+          Publicar nova receita
         </button>
       </div>
 
@@ -182,17 +157,11 @@ function FeedPage({ currentUser, onRequireAuth }) {
         </div>
       )}
 
-      <div className={`feed-grid ${showForm ? "has-form" : ""}`}>
-        {showForm && (
-          <div className="publish-panel">
-            <RecipeForm onAddRecipe={handleAddRecipe} successMessage={successMessage} />
-          </div>
-        )}
-
+      <div className="feed-grid">
         <div className="recipes-area">
           {isLoading && <p className="recipe-message loading">Buscando receitas na API...</p>}
           {dataMessage && !isLoading && <p className="recipe-message info">{dataMessage}</p>}
-          {successMessage && !showForm && <p className="recipe-message success">{successMessage}</p>}
+          {successMessage && <p className="recipe-message success">{successMessage}</p>}
           <RecipeFilter
             searchTerm={searchTerm}
             selectedCategory={selectedCategory}
@@ -204,6 +173,8 @@ function FeedPage({ currentUser, onRequireAuth }) {
             recipes={filteredRecipes}
             currentUser={currentUser}
             onRequireAuth={onRequireAuth}
+            onSelectRecipe={onSelectRecipe}
+            onDeleteRecipe={handleDeleteRecipe}
           />
         </div>
       </div>
